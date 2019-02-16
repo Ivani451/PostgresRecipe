@@ -1,5 +1,5 @@
 const express = require("express");
-const exphs = require("express-handlebars");
+const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const path = require("path");
 
@@ -12,6 +12,13 @@ db.authenticate()
 
 const app = express();
 
+// Handlebars
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+// Here we set the static folder to use
+app.use(express.static(path.join(__dirname, "public")));
+
 app.get("/", (req, res) => {
   res.send("cool");
 });
@@ -19,6 +26,7 @@ app.get("/", (req, res) => {
 // Routes regarding recipes are taken care of here
 app.use("/recipes", require("./routes/recipes"));
 
+// The port is setup
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
